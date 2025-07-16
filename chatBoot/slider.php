@@ -10,7 +10,7 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
 
     <div class="slider-opcion active mb-3">
-        <a href="chatbot.php">
+        <a href="../chatBoot/chatbot.php">
             <i class="fas fa-comment me-2"></i> ChatBot
         </a>
     </div>
