@@ -194,7 +194,7 @@
                 // Cargar doctores desde el servidor
                 cargarDoctores: function() {
                     $.ajax({
-                        url: '../funciones/obtener_doctores.php',
+                        url: '../funciones/obtener_doctor.php',
                         type: 'GET',
                         dataType: 'json',
                         success: (data) => {

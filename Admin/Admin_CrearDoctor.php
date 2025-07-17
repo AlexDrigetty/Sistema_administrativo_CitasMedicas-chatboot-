@@ -144,7 +144,7 @@
 
             function cargarDoctores() {
                 $.ajax({
-                    url: '../funciones/obtener_doctores.php',
+                    url: '../funciones/obtener_doctor.php',
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {

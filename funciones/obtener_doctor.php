@@ -2,29 +2,29 @@
 require_once '../bd/conexion.php';
 header('Content-Type: application/json');
 
-if (!isset($_GET['id'])) {
-    echo json_encode(['error' => 'ID no proporcionado']);
-    exit;
-}
-
 try {
     $conn = conectarDB();
     
-    $query = "SELECT d.usuario_id as id, d.dni, d.nombre, d.apellidos, d.especialidad, 
-                     d.fecha_ingreso, d.nro_colegiatura, d.activo,
-                     u.email, u.telefono, u.direccion
+    $query = "SELECT 
+                d.usuario_id as id,
+                u.nombre as nombre,
+                u.apellido as apellidos,
+                d.especialidad as especialidad,
+                d.telefono as telefono,
+                u.email as email,
+                d.activo as activo,
+                d.nro_colegiatura as colegiatura
               FROM doctores d
               JOIN usuarios u ON d.usuario_id = u.id
-              WHERE d.usuario_id = ?";
+              ORDER BY u.apellido, u.nombre";
     
-    $stmt = $conn->prepare($query);
-    $stmt->execute([$_GET['id']]);
+    $stmt = $conn->query($query);
+    $doctores = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    $doctor = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    echo json_encode($doctor);
+    echo json_encode($doctores);
     
 } catch (PDOException $e) {
-    echo json_encode(['error' => $e->getMessage()]);
+    echo json_encode([
+        'error' => 'Error al cargar los doctores: ' . $e->getMessage()
+    ]);
 }
-?>

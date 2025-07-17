@@ -5,20 +5,19 @@ header('Content-Type: application/json');
 try {
     $conn = conectarDB();
     
-    $query = "SELECT d.usuario_id as id, d.dni, d.nombre, d.apellidos, d.especialidad, 
-                     d.fecha_ingreso, d.nro_colegiatura, d.activo,
-                     u.email, u.telefono, u.direccion
+    $query = "SELECT d.usuario_id, u.nombre, u.apellido, d.especialidad 
               FROM doctores d
-              JOIN usuarios u ON d.usuario_id = u.id";
+              JOIN usuarios u ON d.usuario_id = u.id
+              WHERE d.activo = TRUE
+              ORDER BY u.apellido, u.nombre";
     
-    $stmt = $conn->prepare($query);
-    $stmt->execute();
-    
+    $stmt = $conn->query($query);
     $doctores = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     echo json_encode($doctores);
     
 } catch (PDOException $e) {
-    echo json_encode(['error' => $e->getMessage()]);
+    echo json_encode([
+        'error' => 'Error al cargar los doctores: ' . $e->getMessage()
+    ]);
 }
-?>
