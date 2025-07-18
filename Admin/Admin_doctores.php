@@ -13,7 +13,6 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../css/admin.css">
 </head>
-
 <body>
 
     <div class="dashboard-container">
@@ -22,7 +21,7 @@
         <div class="main-content">
             <?php include 'Admin_header.php'; ?>
 
-            <div class="container py-5">
+            <div class="container-fluid mt-4 px-5">
                 <div class="sesiones view-switcher btn-group" role="group">
                     <button type="button" class="btn active" data-view="cards-view">
                         <i class="fas fa-th-large"></i> Vista de Tarjetas
@@ -46,6 +45,7 @@
                                     <th>Foto</th>
                                     <th>Nombre</th>
                                     <th>Apellidos</th>
+                                    <th>Email</th>
                                     <th>Especialidad</th>
                                     <th>Estado</th>
                                     <th>Acciones</th>
@@ -62,10 +62,10 @@
     </div>
 
     <!-- Modal para Editar Doctor -->
-    <div class="modal fade" id="editarDoctorModal" tabindex="-1" aria-labelledby="editarDoctorModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editarDoctorModal" tabindex="-1" aria-labelledby="editarDoctorModalLabel" aria-hidden="true" style="margin-top: 130px;">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header text-white" style="background-color: #2C3E50;">
                     <h5 class="modal-title" id="editarDoctorModalLabel">Editar Doctor</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -114,15 +114,11 @@
                                     <option value="0">Inactivo</option>
                                 </select>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Foto (URL)</label>
-                                <input type="text" class="form-control" name="foto" id="doctorFoto" placeholder="Opcional - Ingrese URL de imagen">
-                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                        <button type="button" class="boton-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="boton-actualizar">Actualizar</button>
                     </div>
                 </form>
             </div>
@@ -130,16 +126,16 @@
     </div>
 
     <!-- Modal para Eliminar Doctor -->
-    <div class="modal fade" id="eliminarDoctorModal" tabindex="-1" aria-labelledby="eliminarDoctorModalLabel" aria-hidden="true">
+    <div class="modal fade" id="eliminarDoctorModal" tabindex="-1" aria-labelledby="eliminarDoctorModalLabel" aria-hidden="true" style="margin-top: 130px;">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
+                <div class="modal-header text-white" style="background-color: #2c3e50;">
                     <h5 class="modal-title" id="eliminarDoctorModalLabel">Confirmar Eliminación</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="formEliminarDoctor" method="POST" action="../funciones/eliminar_doctor.php">
                     <div class="modal-body">
-                        <div class="alert alert-danger">
+                        <div class="alert" style="background-color: #cdd4dbff;">
                             <i class="fas fa-exclamation-triangle me-2"></i>
                             <strong>¡Advertencia!</strong> Esta acción eliminará permanentemente al doctor y todos sus datos asociados.
                         </div>
@@ -147,8 +143,8 @@
                         <input type="hidden" name="id" id="doctorIdEliminar">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-danger">Eliminar Permanentemente</button>
+                        <button type="button" class="boton-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="boton-actualizar">Eliminar</button>
                     </div>
                 </form>
             </div>
@@ -213,42 +209,39 @@
                     });
                 },
 
-                // Generar HTML para la vista de tarjetas
                 generarVistaTarjetas: function(doctores) {
                     let cardsHtml = '';
 
                     doctores.forEach(doctor => {
                         const avatar = this.generarAvatar(doctor.nombre, doctor.apellidos);
                         const estadoBadge = doctor.activo ?
-                            '<span class="badge bg-success">Activo</span>' :
-                            '<span class="badge bg-secondary">Inactivo</span>';
+                            '<span class="activo">Activo</span>' :
+                            '<span class="inactivo">Inactivo</span>';
 
                         cardsHtml += `
                             <div class="col-md-4 mb-4">
-                                <div class="card doctor-card h-100">
+                                <div class="formulario-doctor doctor-card h-100">
                                     <div class="doctor-img-container">
                                         ${doctor.foto ? 
                                             `<img src="${doctor.foto}" class="img-fluid rounded-circle" style="width: 120px; height: 120px; object-fit: cover;" alt="${doctor.nombre} ${doctor.apellidos}">` : 
                                             `<div class="avatar-container">${avatar.html}</div>`}
                                     </div>
-                                    <div class="card-body text-center">
-                                        <h5 class="card-title">${doctor.nombre} ${doctor.apellidos}</h5>
-                                        <p class="card-text text-muted">${doctor.especialidad}</p>
+                                    <div class="card-body text-center" style="transform: translateY(-2px);">
+                                        <h5 class="card-titulo" style="color: #2C3E50;">${doctor.nombre} ${doctor.apellidos}</h5>
+                                        <p class="card-texto" style="color: #2C3E50;">${doctor.especialidad}</p>
                                         ${estadoBadge}
                                     </div>
                                     <div class="card-footer bg-transparent d-flex justify-content-center">
-                                        <button class="btn btn-sm btn-warning editar-doctor me-2" data-id="${doctor.id}" 
+                                        <button class="editar-doctor me-2" data-id="${doctor.id}" 
                                             data-nombre="${doctor.nombre}" 
                                             data-apellidos="${doctor.apellidos}"
                                             data-especialidad="${doctor.especialidad}"
                                             data-telefono="${doctor.telefono}"
                                             data-email="${doctor.email}"
                                             data-activo="${doctor.activo}"
-                                            data-foto="${doctor.foto || ''}">
-                                            <i class="fas fa-edit"></i> Editar
+                                            data-foto="${doctor.foto || ''}"> Editar
                                         </button>
-                                        <button class="btn btn-sm btn-danger eliminar-doctor" data-id="${doctor.id}">
-                                            <i class="fas fa-trash"></i> Eliminar
+                                        <button class="eliminar-doctor" data-id="${doctor.id}">Eliminar
                                         </button>
                                     </div>
                                 </div>
@@ -266,8 +259,8 @@
                     doctores.forEach(doctor => {
                         const avatar = this.generarAvatar(doctor.nombre, doctor.apellidos);
                         const estadoBadge = doctor.activo ?
-                            '<span class="badge bg-success">Activo</span>' :
-                            '<span class="badge bg-secondary">Inactivo</span>';
+                            '<span class="activo">Activo</span>' :
+                            '<span class="inactivo">Inactivo</span>';
 
                         tableHtml += `
                             <tr>
@@ -278,10 +271,11 @@
                                 </td>
                                 <td class="align-middle">${doctor.nombre}</td>
                                 <td class="align-middle">${doctor.apellidos}</td>
+                                <td class="align-middle">${doctor.email}</td>
                                 <td class="align-middle">${doctor.especialidad}</td>
                                 <td class="align-middle">${estadoBadge}</td>
                                 <td class="align-middle">
-                                    <button class="btn btn-sm btn-warning editar-doctor me-1" data-id="${doctor.id}"
+                                    <button class="editar-doctor" data-id="${doctor.id}"
                                         data-nombre="${doctor.nombre}" 
                                         data-apellidos="${doctor.apellidos}"
                                         data-especialidad="${doctor.especialidad}"
@@ -291,7 +285,7 @@
                                         data-foto="${doctor.foto || ''}">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-danger eliminar-doctor" data-id="${doctor.id}">
+                                    <button class="eliminar-doctor" data-id="${doctor.id}">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>

@@ -3,7 +3,7 @@ session_start();
 require_once '../funciones/chatboot_historial.php';
 
 if (!isset($_SESSION['usuario'])) {
-    header('Location: ../login.php');
+    header('Location: login.php');
     exit;
 }
 
@@ -169,10 +169,10 @@ $citas_paginadas = array_slice($citas, $indice_inicio, $por_pagina);
                                         <td><?php echo date('d/m/Y H:i', strtotime($cita['fecha'])); ?></td>
                                         <td>
                                             <?php $badgeClass = [
-                                                'pendiente' => 'bg-warning',
-                                                'confirmada' => 'bg-success',
-                                                'completada' => 'bg-info',
-                                                'cancelada' => 'bg-danger'
+                                                'pendiente' => 'estado-pendiente',
+                                                'confirmada' => 'estado-confirmada',
+                                                'completada' => 'estado-completada',
+                                                'cancelada' => 'estado-cancelada'
                                             ][$cita['estado']] ?? 'bg-secondary'; ?>
                                             <span class="badge badge-estado <?php echo $badgeClass; ?>">
                                                 <?php echo ucfirst($cita['estado']); ?>

@@ -20,12 +20,12 @@
 
             <div id="alertContainer" class="custom-alert"></div>
 
-            <div class="container-fluid py-4">
+            <div class="container-fluid mt-4 px-5">
                 <div class="row">
                     <div class="col-md-5">
-                        <div class="card mb-4">
-                            <div class="card-header text-white" style="background-color:#2C3E50">
-                                <h5 class="mb-0"><i class="fas fa-user-md me-2"></i>Registrar Nuevo Doctor</h5>
+                        <div class="formulario-doctor mb-4">
+                            <div class="card-header text-white" style="background-color:#2C3E50; padding: 20px; overflow: hidden;">
+                                <h5 class="mb-0 text-align-center"><i class="fas fa-user-md me-2"></i>Registrar Nuevo Doctor</h5>
                             </div>
                             <div class="card-body">
                                 <form id="formCrearDoctor" method="POST" action="../funciones/crear_doctor.php">
@@ -34,8 +34,6 @@
                                         <input type="text" class="form-control" name="dni" required
                                             pattern="[0-9]{8}" title="Ingrese 8 dígitos numéricos">
                                     </div>
-
-
 
                                     <div class="row">
                                         <div class="box-form col-md-6 mb-3">
@@ -89,8 +87,8 @@
                                         <input type="password" class="form-control" name="confirmar_contrasena" required>
                                     </div>
 
-                                    <div class="d-grid">
-                                        <button type="submit" class="btn" style="background-color: #2C3E50; color: white;">
+                                    <div class="d-grid mt-4 mb-2">
+                                        <button type="submit" class="btn" style="background-color: #2c3e50; color: white;">
                                             <i class="fas fa-save me-2"></i>Registrar Doctor
                                         </button>
                                     </div>
@@ -100,9 +98,9 @@
                     </div>
 
                     <div class="col-md-7">
-                        <div class="card-body" style="padding: 0;">
-                            <div class="table-responsive">
-                                <table class="table  table-hover" id="tablaDoctores" style="text-align: center;">
+                        <div class="card-body" style="padding: 0; overflow-y: scroll; height: 655px;">
+                            <div class="table-responsive" >
+                                <table class="table  table-hover" id="tablaDoctores" style="text-align: center; ">
                                     <thead>
                                         <tr>
                                             <th>Foto</th>
@@ -167,8 +165,8 @@
                                 `<div class="avatar-iniciales" style="background-color: ${color}">${iniciales}</div>`;
 
                             const estadoBadge = doctor.activo ?
-                                '<span class="badge bg-success">Activo</span>' :
-                                '<span class="badge bg-secondary">Inactivo</span>';
+                                '<span class="activo">Activo</span>' :
+                                '<span class="inactivo">Inactivo</span>';
 
                             tableHtml += `
                             <tr>

@@ -133,6 +133,24 @@ body {
     text-decoration: none;
 }
 
+.boton-cancelar{
+    background-color: red;
+    border-radius: 7px;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    font-weight: 600;
+}
+
+.boton-actualizar{
+    background-color: var(--primary-color);
+    border-radius: 7px;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    font-weight: 600;
+}
+
 .logout-btn:hover {
     background-color: #c0392b;
 }
@@ -182,17 +200,25 @@ body {
 
 .card-body {
     padding: 20px;
-    flex-grow: 1;
 }
 
-.card-title {
-    color: var(--primary-color);
+
+.card-titulo {
+    color: white;
     font-weight: 600;
     margin-bottom: 10px;
-    font-size: 1.2rem;
+    font-size: 20px;
 }
 
-.card-text.text-muted {
+.formulario-doctor {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+}
+
+.card-texto.text-muted {
     font-size: 0.9rem;
     color: #6c757d !important;
 }
@@ -203,18 +229,63 @@ body {
     padding: 15px 20px;
 }
 
+.box {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.form-doctor {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.eliminar-doctor {
+    background-color: red;
+    color: white;
+    border-radius: 5px;
+    padding: 5px 10px;
+    border: none;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+}
+
+.editar-doctor {
+    background-color: rgb(14, 182, 219);
+    color: white;
+    border-radius: 5px;
+    padding: 7px 15px;
+    border: none;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+}
+
+.eliminar-doctor:hover,
+.editar-doctor:hover {
+    transform: translateY(-2px);
+}
+
+.card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: var(--primary-color);
+    color: white;
+}
+
 
 .sesiones {
     margin-bottom: 20px;
     display: flex;
-    justify-content: flex-end; 
-    
+    justify-content: flex-end;
+
     .btn {
         width: 200px;
         background-color: #dfdfdf;
         padding: 10px 20px;
         transition: all 0.2s ease-in-out;
-        border: none; 
+        border: none;
         flex: none;
     }
 
@@ -230,17 +301,17 @@ body {
 }
 
 /* Estilos para la tabla */
-.table{
+.table {
     border-radius: 5px;
     padding: 10px;
     overflow: hidden;
     text-align: center;
 
-    tr{
+    tr {
         background-color: #2c3e50;
     }
 
-    th{
+    th {
         background-color: inherit;
         color: white;
         font-weight: 500;
@@ -260,6 +331,24 @@ body {
     text-transform: uppercase;
     margin: 0 auto;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.activo {
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    background-color: rgb(0, 187, 0);
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.inactivo {
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    background-color: rgb(205, 203, 203);
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 
 /* Alertas personalizadas */
@@ -304,8 +393,10 @@ body {
     position: fixed;
     top: 20px;
     right: 20px;
-    z-index: 1100;
+    z-index: 1000;
     min-width: 300px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideIn 0.5s forwards;
 }
 
 .avatar-iniciales {
@@ -320,18 +411,297 @@ body {
     font-size: 1.2rem;
 }
 
-.card{
+.card {
     margin: 0;
 }
 
 /* formulario de crear doctor*/
 .box-form {
-    .form-label{
+    .form-label {
         font-weight: 600;
     }
 }
 
 
+/*citas*/
+.badge-estado {
+    font-size: 16px;
+    padding: 8px 10px;
+}
+
+.filtros-row {
+    display: flex;
+    gap: 10px;
+}
+
+.filters-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+
+    .form-select {
+        min-width: 230px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+        background-color: #f8f9fa;
+    }
+
+    .btn {
+        font-size: 22px;
+    }
+}
+
+/*Doctor*/
+
+.doctor-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+    font-weight: bold;
+    margin-right: 2rem;
+}
+
+.avatar-iniciales {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    background-color: var(--primary-color);
+    margin-right: 10px;
+}
+
+.doctor-nombre {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.doctor-especialidad {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    margin-bottom: 1rem;
+}
+
+.doctor-contacto {
+    margin-bottom: 0.5rem;
+    color: #555;
+}
+
+.citas-titulo {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin: 2rem 0 1rem 0;
+}
+
+.citas-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.citas-tabla th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+    padding: 1rem;
+    text-align: left;
+}
+
+.citas-tabla td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.citas-tabla tr:hover {
+    background-color: #f8f9fa;
+}
+
+.prioridad-alta {
+    background-color: #e74c3c;
+    color: white;
+    font-weight: 600;
+}
+
+.prioridad-media {
+    background-color: #f39c12;
+    color: white;
+    font-weight: 600;
+}
+
+.prioridad-baja {
+    background-color: #2ecc71;
+    color: white;
+    font-weight: bold;
+}
+
+.estado-pendiente {
+    color: #e67e22;
+    font-weight: bold;
+}
+
+.estado-atendiendo {
+    color: #2196F3;
+    font-weight: bold;
+}
+
+.estado-completada {
+    color: #005f28;
+    font-weight: bold;
+}
+
+.estado-cancelada {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.estado-desconocido {
+    color: #7f8c8d;
+    font-weight: bold;
+}
+
+.atender {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.atender:hover {
+    background-color: #626a72;
+}
+
+.prioridad {
+    font-size: 0.9rem;
+    padding: 0.5em 0.75em;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    display: inline-block;
+    min-width: 100px;
+    text-align: center;
+}
+
+.nav-tabs .nav-link {
+    color: #495057;
+    font-weight: 500;
+    border: none;
+    padding: 12px 20px;
+    margin-right: 5px;
+}
+
+.nav-tabs .nav-link.active {
+    color: #2C3E50;
+    border-bottom: 3px solid #2C3E50;
+    background-color: transparent;
+}
+
+.nav-tabs .nav-link:hover:not(.active) {
+    border-bottom: 3px solid #dee2e6;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 25px 0;
+}
+
+.page-item .page-link {
+    color: #2C3E50;
+    border: 1px solid #dee2e6;
+    padding: 0.5rem 0.9rem;
+    border-radius: 0.25rem;
+    transition: all 0.3s ease;
+}
+
+.page-item .page-link:hover {
+    background-color: #e9ecef;
+    color: #2C3E50;
+}
+
+.page-item.active .page-link {
+    background-color: #2C3E50;
+    border-color: #2C3E50;
+    color: white;
+}
+
+.page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: #dee2e6;
+}
+
+.page-nav {
+    background-color: #2C3E50;
+    color: white !important;
+}
+
+.page-nav:hover {
+    background-color: #1a252f !important;
+    color: white !important;
+}
+
+.filters-row {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}
+
+.filter-group {
+    flex: 1;
+}
+
+
+.alert-floating {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    min-width: 300px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideIn 0.5s forwards;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -344,183 +714,3 @@ body {
         height: 100px;
     }
 }
-
-
-
-    /* <style>
-                .modal-sintomas {
-            display: none;
-            position: fixed;
-            z-index: 1050;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content-sintomas {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transform: scale(0.9);
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .modal-sintomas.show .modal-content-sintomas {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        .close-modal {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close-modal:hover {
-            color: black;
-        }
-
-        .mensaje.bot {
-            background-color: #e3f2fd;
-            border-radius: 15px;
-            padding: 10px 15px;
-            margin: 5px 0;
-            max-width: 80%;
-            align-self: flex-start;
-        }
-
-        .mensaje.user {
-            background-color: #d1e7dd;
-            border-radius: 15px;
-            padding: 10px 15px;
-            margin: 5px 0;
-            max-width: 80%;
-            align-self: flex-end;
-        }
-
-        .chat-mensajes {
-            display: flex;
-            flex-direction: column;
-            padding: 15px;
-            height: 400px;
-            overflow-y: auto;
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            scroll-behavior: smooth;
-        }
-
-        .btn-cita {
-            margin: 5px;
-            padding: 8px 15px;
-            border-radius: 20px;
-            background-color: #0d6efd;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-cita:hover {
-            background-color: #0b5ed7;
-            transform: translateY(-2px);
-        }
-
-        .sintoma-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background-color: #f9f9f9;
-        }
-
-        .sintoma-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #0d6efd;
-        }
-
-        .error-message {
-            color: #dc3545;
-            margin-bottom: 15px;
-        }
-
-        .doctor-option {
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            background-color: #f8f9fa;
-            transition: all 0.2s ease;
-        }
-
-        .doctor-option:hover {
-            background-color: #e9ecef;
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, .3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            margin-left: 10px;
-        }
-
-        .btn-send {
-            background: none;
-            border: none;
-            color: #0d6efd;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0 10px;
-        }
-
-        .disabled-form {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        .new-interaction-marker {
-            text-align: center;
-            margin: 10px 0;
-            color: #6c757d;
-            font-size: 0.9em;
-            font-style: italic;
-            border-top: 1px dashed #ccc;
-            border-bottom: 1px dashed #ccc;
-            padding: 5px 0;
-        }
-
-        .interaction-section {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-
-        .diagnosis-card {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid #0d6efd;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-    </style> */
