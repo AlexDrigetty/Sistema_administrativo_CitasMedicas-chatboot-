@@ -17,7 +17,13 @@ function obtenerCitasParaTabla($usuarioId) {
               FROM citas_medicas cm
               JOIN doctores d ON cm.doctor_id = d.usuario_id
               WHERE cm.usuario_id = :usuarioId
-              ORDER BY cm.fecha_hora DESC";
+              ORDER BY 
+                CASE 
+                  WHEN cm.estado = 'pendiente' THEN 1
+                  WHEN cm.estado = 'completada' THEN 2
+                  ELSE 3
+                END,
+                cm.fecha_hora DESC";
     
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':usuarioId', $usuarioId, PDO::PARAM_INT);

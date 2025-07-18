@@ -80,20 +80,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $tiempo = $_POST['tiempo_general'];
                     switch ($tiempo) {
                         case 'ahora':
-                            $puntaje += 5;
+                            $puntaje += 2;
                             break;
                         case '1_dia':
-                            $puntaje += 4;
-                            break;
-                        case '3_dias':
                             $puntaje += 3;
                             break;
+                        case '3_dias':
+                            $puntaje += 4;
+                            break;
                         case '1_semana':
-                            $puntaje += 2;
+                            $puntaje += 5;
                             break;
                     }
 
-                    // Puntaje por intensidad
                     switch ($detalles['intensidad']) {
                         case 'leve':
                             $puntaje += 1;
@@ -220,7 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Mensaje final de la interacción
                     $_SESSION['chat_history'][] = [
                         'tipo' => 'bot',
-                        'texto' => 'Gracias por usar PriorizaNow. Si necesitas ayuda con otro problema de salud, por favor descríbemelo.',
+                        'texto' => 'Gracias por usar PriorizaNow. Si necesitas ayuda con otro problema de salud, por favor descríbemelo. Ten en cuenta que puedes ver tu historial para ver tu reservación',
                         'interaction_id' => $currentInteractionId
                     ];
                     
@@ -336,200 +335,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../css/chatboot.css">
-    <style>
-        .modal-sintomas {
-            display: none;
-            position: fixed;
-            z-index: 1050;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content-sintomas {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transform: scale(0.9);
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .modal-sintomas.show .modal-content-sintomas {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        .close-modal {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close-modal:hover {
-            color: black;
-        }
-
-        .mensaje.bot {
-            background-color: #e3f2fd;
-            border-radius: 15px;
-            padding: 10px 15px;
-            margin: 5px 0;
-            max-width: 80%;
-            align-self: flex-start;
-        }
-
-        .mensaje.user {
-            background-color: #d1e7dd;
-            border-radius: 15px;
-            padding: 10px 15px;
-            margin: 5px 0;
-            max-width: 80%;
-            align-self: flex-end;
-        }
-
-        .chat-mensajes {
-            display: flex;
-            flex-direction: column;
-            padding: 15px;
-            height: 400px;
-            overflow-y: auto;
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            scroll-behavior: smooth;
-        }
-
-        .btn-cita {
-            margin: 5px;
-            padding: 8px 15px;
-            border-radius: 20px;
-            background-color: #0d6efd;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-cita:hover {
-            background-color: #0b5ed7;
-            transform: translateY(-2px);
-        }
-
-        .btn-cita.btn-secondary {
-            background-color: #6c757d;
-            border-color: #6c757d;
-        }
-
-        .btn-cita.btn-secondary:hover {
-            background-color: #5a6268;
-            border-color: #545b62;
-        }
-
-        .sintoma-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background-color: #f9f9f9;
-        }
-
-        .sintoma-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #0d6efd;
-        }
-
-        .error-message {
-            color: #dc3545;
-            margin-bottom: 15px;
-        }
-
-        .doctor-option {
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            background-color: #f8f9fa;
-            transition: all 0.2s ease;
-        }
-
-        .doctor-option:hover {
-            background-color: #e9ecef;
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, .3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            margin-left: 10px;
-        }
-
-        .btn-send {
-            background: none;
-            border: none;
-            color: #0d6efd;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0 10px;
-        }
-
-        .disabled-form {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        .new-interaction-marker {
-            text-align: center;
-            margin: 10px 0;
-            color: #6c757d;
-            font-size: 0.9em;
-            font-style: italic;
-            border-top: 1px dashed #ccc;
-            border-bottom: 1px dashed #ccc;
-            padding: 5px 0;
-        }
-
-        .interaction-section {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-
-        .diagnosis-card {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid #0d6efd;
-        }
-
-        .btn-group-citas {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
 </head>
 <body>
     <main class="container-fluid">
@@ -561,7 +366,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         // Mostrar marcador de nueva interacción si cambia
                         if ($lastInteractionId !== null && $currentMsgInteractionId !== $lastInteractionId): ?>
-                            <div class="new-interaction-marker">--- Nueva consulta ---</div>
+                            
                         <?php endif; ?>
                         
                         <div class="mensaje <?php echo $mensaje['tipo']; ?>">
@@ -619,7 +424,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
 
-        <!-- Modal para síntomas detallados -->
         <div id="modalSintomas" class="modal-sintomas" style="<?php echo $mostrarModalSintomas ? 'display: block;' : 'display: none;' ?>">
             <div class="modal-content-sintomas <?php echo $mostrarModalSintomas ? 'show' : ''; ?>">
                 <span class="close-modal" onclick="cerrarModal()">&times;</span>
@@ -837,6 +641,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="sintomas_detallados[${sintoma.sintoma_id}][intensidad]" id="intensidad_${sintoma.sintoma_id}_moderado" value="moderado">
                                         <label class="form-check-label" for="intensidad_${sintoma.sintoma_id}_moderado">Moderado</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="sintomas_detallados[${sintoma.sintoma_id}][intensidad]" id="intensidad_${sintoma.sintoma_id}_intenso" value="intenso">
+                                        <label class="form-check-label" for="intensidad_${sintoma.sintoma_id}_intenso">Intenso</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="sintomas_detallados[${sintoma.sintoma_id}][intensidad]" id="intensidad_${sintoma.sintoma_id}_intenso" value="intenso">
+                                        <label class="form-check-label" for="intensidad_${sintoma.sintoma_id}_intenso">Intenso</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="sintomas_detallados[${sintoma.sintoma_id}][intensidad]" id="intensidad_${sintoma.sintoma_id}_intenso" value="intenso">

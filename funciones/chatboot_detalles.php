@@ -20,7 +20,7 @@ function mostrarValor($valor, $mensajeVacio = 'No especificado') {
 ?>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
         <h5>Información de la Cita</h5>
         <ul class="list-group list-group-flush mb-4">
             <li class="list-group-item d-flex justify-content-between">
@@ -30,10 +30,10 @@ function mostrarValor($valor, $mensajeVacio = 'No especificado') {
             <li class="list-group-item d-flex justify-content-between">
                 <span class="fw-bold">Estado:</span>
                 <span class="badge <?php echo [
-                    'pendiente' => 'bg-warning',
-                    'confirmada' => 'bg-success',
-                    'completada' => 'bg-info',
-                    'cancelada' => 'bg-danger'
+                    'pendiente' => 'estado-pendiente',
+                    'confirmada' => 'estado-confirmada',
+                    'completada' => 'estado-completada',
+                    'cancelada' => 'estado-cancelada'
                 ][$detalles['estado']] ?? 'bg-secondary'; ?>">
                     <?php echo ucfirst($detalles['estado']); ?>
                 </span>
@@ -53,19 +53,7 @@ function mostrarValor($valor, $mensajeVacio = 'No especificado') {
         </ul>
     </div>
     
-    <div class="col-md-6">
-        <h5>Información del Doctor</h5>
-        <ul class="list-group list-group-flush mb-4">
-            <li class="list-group-item d-flex justify-content-between">
-                <span class="fw-bold">Colegiatura:</span>
-                <span><?php echo mostrarValor($detalles['nro_colegiatura']); ?></span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between">
-                <span class="fw-bold">Teléfono:</span>
-                <span><?php echo mostrarValor($detalles['telefono']); ?></span>
-            </li>
-        </ul>
-    </div>
+    
 </div>
 
 <div class="row mt-3">
@@ -73,16 +61,16 @@ function mostrarValor($valor, $mensajeVacio = 'No especificado') {
         <h5>Detalles Médicos</h5>
         <div class="card mb-3">
             <div class="card-body">
-                <h6 class="card-title">Síntomas reportados</h6>
-                <p class="card-text"><?php echo mostrarValor($detalles['sintomas'], 'No se registraron síntomas'); ?></p>
+                <h6 class="card-titulo">Síntomas reportados</h6>
+                <p class="card-texto"><?php echo mostrarValor($detalles['sintomas'], 'No se registraron síntomas'); ?></p>
             </div>
         </div>
         
         <?php if (!empty($detalles['diagnosticos'])): ?>
             <div class="card mb-3">
                 <div class="card-body">
-                    <h6 class="card-title">Diagnósticos</h6>
-                    <p class="card-text"><?php echo htmlspecialchars($detalles['diagnosticos']); ?></p>
+                    <h6 class="card-titulo">Diagnósticos</h6>
+                    <p class="card-texto"><?php echo htmlspecialchars($detalles['diagnosticos']); ?></p>
                 </div>
             </div>
         <?php endif; ?>
@@ -90,8 +78,8 @@ function mostrarValor($valor, $mensajeVacio = 'No especificado') {
         <?php if (!empty($detalles['medicamentos'])): ?>
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title">Medicamentos recomendados</h6>
-                    <p class="card-text"><?php echo htmlspecialchars($detalles['medicamentos']); ?></p>
+                    <h6 class="card-titulo">Medicamentos recomendados</h6>
+                    <p class="card-texto"><?php echo htmlspecialchars($detalles['medicamentos']); ?></p>
                 </div>
             </div>
         <?php endif; ?>

@@ -92,19 +92,16 @@
             overflow-y: auto;
 
             p {
-                background-color: #ecf0f1;
-                padding: 15px;
                 border-radius: 10px;
                 color: rgb(0, 0, 0, 0.8);
                 font-weight: 600;
                 font-size: 18px;
                 letter-spacing: 0.4px;
-
+                margin: 10px 0;
             }
         }
 
         .box-inputs {
-            padding: 10px 15px;
             position: relative;
 
             .form-control {
@@ -217,4 +214,198 @@
         color: white !important;
     }
 
+}
+
+.modal-sintomas {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content-sintomas {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transform: scale(0.9);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.modal-sintomas.show .modal-content-sintomas {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.close-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: black;
+}
+
+.mensaje.bot {
+    background-color: #d5d6d6ff;
+    border-radius: 15px;
+    padding: 10px 15px;
+    margin: 10px 0;
+    max-width: 80%;
+    align-self: flex-start;
+    color: black;
+}
+
+.mensaje.user {
+    background-color: #bbd5e8ff;
+    border-radius: 15px;
+    padding: 10px 15px;
+    margin: 5px 0;
+    max-width: 80%;
+    align-self: flex-end;
+}
+
+.chat-mensajes {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    height: 400px;
+    overflow-y: auto;
+    background-color: transparent;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    scroll-behavior: smooth;
+}
+
+.btn-cita {
+    margin: 5px;
+    padding: 8px 15px;
+    border-radius: 20px;
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cita:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-2px);
+}
+
+.btn-cita.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-cita.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+.sintoma-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+}
+
+.sintoma-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #0d6efd;
+}
+
+.error-message {
+    color: #dc3545;
+    margin-bottom: 15px;
+}
+
+.doctor-option {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    transition: all 0.2s ease;
+}
+
+.doctor-option:hover {
+    background-color: #e9ecef;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, .3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    margin-left: 10px;
+}
+
+.btn-send {
+    background: none;
+    border: none;
+    color: #0d6efd;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+.disabled-form {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.new-interaction-marker {
+    text-align: center;
+    margin: 10px 0;
+    color: #6c757d;
+    font-size: 0.9em;
+    font-style: italic;
+    border-top: 1px dashed #ccc;
+    border-bottom: 1px dashed #ccc;
+    padding: 5px 0;
+}
+
+.interaction-section {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.diagnosis-card {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+    border-left: 4px solid #0d6efd;
+}
+
+.btn-group-citas {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }

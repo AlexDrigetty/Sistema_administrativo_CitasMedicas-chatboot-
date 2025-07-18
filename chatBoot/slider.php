@@ -2,22 +2,42 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+// Obtener el nombre del archivo actual
+$current_page = basename($_SERVER['PHP_SELF']);
+
+// Manejar el tema oscuro
+if (isset($_GET['theme'])) {
+    $_SESSION['theme'] = $_GET['theme'] === 'dark' ? 'dark' : 'light';
+}
+
+$current_theme = $_SESSION['theme'] ?? 'light';
 ?>
 
+<!DOCTYPE html>
+<html lang="es" data-theme="<?php echo $current_theme; ?>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Aplicación</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/inicio.css">
+
+</head>
+<body>
 <div class="slider">
     <div class="slider-cabeza">
         <h4 class="py-3 m"><i class="fa-solid fa-filter me-2"></i>Opciones</h4>
     </div>
 
-    <div class="slider-opcion active mb-3">
+    <div class="slider-opcion <?php echo ($current_page == 'chatbot.php') ? 'active' : ''; ?> mb-3">
         <a href="../chatBoot/chatbot.php">
             <i class="fas fa-comment me-2"></i> ChatBot
         </a>
     </div>
 
     <?php if (isset($_SESSION['usuario'])): ?>
-        <!-- Opciones solo para usuarios logueados -->
-        <div class="slider-opcion  mb-3">
+        <div class="slider-opcion <?php echo ($current_page == 'Usuario_historial.php') ? 'active' : ''; ?> mb-3">
             <a href="../Usuario/Usuario_historial.php">
                 <i class="fas fa-history me-2"></i> Ver Historial
             </a>
@@ -28,16 +48,18 @@ if (session_status() === PHP_SESSION_NONE) {
         <h2 class="mb-3">Ajustes Rápidos</h2>
     </div>
 
-    <!-- Opciones generales -->
-    <div class="slider-opcion mb-3">
+    <!-- Modo oscuro con funcionalidad -->
+    <div class="slider-opcion mb-3 theme-toggle" onclick="toggleTheme()">
         <i class="fas fa-moon me-2"></i> Modo Oscuro
+        <span class="theme-status float-end">
+            <?php echo ($current_theme == 'dark') ? '<i class="fas fa-toggle-on"></i>' : '<i class="fas fa-toggle-off"></i>'; ?>
+        </span>
     </div>
 
     <div class="slider-opcion mb-3">
         <i class="fas fa-language me-2"></i> Cambio de Idioma
     </div>
 
-    <!-- Gestión de sesión -->
     <?php if (isset($_SESSION['usuario'])): ?>
         <div class="slider-opcion mb-3">
             <a href="#" id="btnCerrarSesion" class="logout-link">
@@ -75,3 +97,44 @@ if (session_status() === PHP_SESSION_NONE) {
         });
     </script>
 <?php endif; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Navegación activa
+    const currentUrl = window.location.pathname.split('/').pop();
+    const sliderOptions = document.querySelectorAll('.slider-opcion');
+    
+    sliderOptions.forEach(option => {
+        option.classList.remove('active');
+        const link = option.querySelector('a');
+        if (link) {
+            const linkUrl = link.getAttribute('href').split('/').pop();
+            if (linkUrl === currentUrl) {
+                option.classList.add('active');
+            }
+        }
+    });
+});
+
+// Función para cambiar el tema
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    // Cambiar el tema visualmente
+    document.documentElement.setAttribute('data-theme', newTheme);
+    
+    // Actualizar el icono del toggle
+    const themeIcon = document.querySelector('.theme-status');
+    themeIcon.innerHTML = newTheme === 'dark' ? '<i class="fas fa-toggle-on"></i>' : '<i class="fas fa-toggle-off"></i>';
+    
+    // Guardar la preferencia en el servidor
+    fetch(window.location.pathname + `?theme=${newTheme}`)
+        .then(() => {
+            // Recargar para aplicar cambios persistentes
+            // window.location.reload(); // Opcional: descomentar si prefieres recargar
+        });
+}
+</script>
+</body>
+</html>

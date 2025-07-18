@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../bd/conexion.php';
+require_once  '../bd/conexion.php';
 
 /**
  * Obtiene los síntomas de la base de datos
@@ -177,14 +177,12 @@ function registrarDiagnostico($interaccionId, $sintomasDetallados, $enfermedades
     $db = conectarDB();
     
     try {
-        // 1. Registrar el diagnóstico principal
         $query = "INSERT INTO diagnosticos (interaccion_id, puntaje_total, nivel_prioridad) VALUES (?, ?, ?)";
         $stmt = $db->prepare($query);
         $puntajeTotal = array_sum(array_column($sintomasDetallados, 'puntaje'));
         $stmt->execute([$interaccionId, $puntajeTotal, $prioridad]);
         $diagnosticoId = $db->lastInsertId();
         
-        // 2. Registrar síntomas del diagnóstico
         foreach ($sintomasDetallados as $sintoma) {
             $query = "INSERT INTO diagnostico_sintomas (diagnostico_id, sintoma_id, intensidad, tiempo_presentacion, puntaje_individual) 
                       VALUES (?, ?, ?, ?, ?)";
@@ -198,7 +196,6 @@ function registrarDiagnostico($interaccionId, $sintomasDetallados, $enfermedades
             ]);
         }
         
-        // 3. Registrar enfermedades sugeridas
         foreach ($enfermedades as $enfermedad) {
             $query = "INSERT INTO diagnostico_enfermedades (diagnostico_id, enfermedad_id, probabilidad) 
                       VALUES (?, ?, ?)";
@@ -207,7 +204,6 @@ function registrarDiagnostico($interaccionId, $sintomasDetallados, $enfermedades
             $stmt->execute([$diagnosticoId, $enfermedad['enfermedad_id'], $probabilidad]);
         }
         
-        // 4. Registrar medicamentos recomendados
         foreach ($medicamentos as $medicamento) {
             $query = "INSERT INTO diagnostico_medicamentos (diagnostico_id, medicamento_id) 
                       VALUES (?, ?)";
@@ -249,7 +245,6 @@ function registrarCita($interaccionId, $usuarioId, $doctorId, $especialidad) {
     $db = conectarDB();
     
     try {
-        // Generar código de ticket
         $prefix = substr(strtoupper($especialidad), 0, 2);
         $query = "SELECT COUNT(*) as count FROM citas_medicas WHERE doctor_id = ?";
         $stmt = $db->prepare($query);
@@ -257,8 +252,7 @@ function registrarCita($interaccionId, $usuarioId, $doctorId, $especialidad) {
         $count = $stmt->fetch()['count'] + 1;
         $ticketCode = $prefix . '-' . $count;
         
-        // Fecha por defecto: 2 días después
-        $fechaHora = date('Y-m-d H:i:s', strtotime('+2 days'));
+        $fechaHora = date('Y-m-d H:i:s'); 
         
         $query = "INSERT INTO citas_medicas (interaccion_id, usuario_id, doctor_id, ticket_code, fecha_hora) 
                   VALUES (?, ?, ?, ?, ?)";

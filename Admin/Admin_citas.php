@@ -328,7 +328,7 @@
                                     <td>${estadoBadge}</td>
                                     <td>
                                         <span class="prioridad ${prioridadClass}">
-                                            ${prioridadText} (${puntaje})
+                                            ${prioridadText}
                                         </span>
                                     </td>
                                 </tr>

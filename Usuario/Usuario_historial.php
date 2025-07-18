@@ -48,7 +48,7 @@ $estados = array_unique(array_column($citas, 'estado'));
 
 // Configurar paginación
 $pagina_actual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
-$por_pagina = 10;
+$por_pagina = 7;
 $total_citas = count($citas);
 $total_paginas = ceil($total_citas / $por_pagina);
 $pagina_actual = max(1, min($pagina_actual, $total_paginas));
@@ -73,6 +73,9 @@ $citas_paginadas = array_slice($citas, $indice_inicio, $por_pagina);
     <main class="container-fluid">
         <?php include "../chatBoot/slider.php" ?>
 
+        <!-- Contenedor para alertas flotantes -->
+        <div id="alertContainer" style="position: fixed; top: 20px; right: 20px; z-index: 1100; min-width: 300px;"></div>
+
         <div class="chatboot w-100">
             <div class="chat-header">
                 <h4 class="mb-0">PriorizaNow a tu Disposición</h4>
@@ -81,24 +84,8 @@ $citas_paginadas = array_slice($citas, $indice_inicio, $por_pagina);
                 <?php endif; ?>
             </div>
 
-            <?php if (isset($_SESSION['mensaje_exito'])): ?>
-                <div class="alert alert-success alert-dismissible fade show">
-                    <?php echo $_SESSION['mensaje_exito'];
-                    unset($_SESSION['mensaje_exito']); ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            <?php endif; ?>
-
-            <?php if (isset($_SESSION['mensaje_error'])): ?>
-                <div class="alert alert-danger alert-dismissible fade show">
-                    <?php echo $_SESSION['mensaje_error'];
-                    unset($_SESSION['mensaje_error']); ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            <?php endif; ?>
-
             <div class="filtrados mb-3">
-                <form method="get" class="row">
+                <form method="get" class="row mb-0" >
                     <div class="filtro col-md-4">
                         <select class="form-select" id="especialidad" name="especialidad">
                             <option value="">Todas las especialidades</option>
@@ -179,19 +166,19 @@ $citas_paginadas = array_slice($citas, $indice_inicio, $por_pagina);
                                             </span>
                                         </td>
                                         <td>
-                                            <button class="btn btn-sm btn-outline-primary btn-action ver-detalle"
+                                            <button class="btn btn-sm btn-action ver-detalle"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#detalleModal"
                                                 data-cita-id="<?php echo $cita['cita_id']; ?>">
-                                                <i class="fas fa-eye"></i>
+                                                <i class="fa-solid fa-circle-info"></i>
                                             </button>
 
                                             <?php if ($cita['estado'] === 'pendiente'): ?>
-                                                <button class="btn btn-sm btn-outline-danger btn-action cancelar-cita"
+                                                <button class="btn btn-sm  btn-action cancelar-cita"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#cancelarModal"
                                                     data-cita-id="<?php echo $cita['cita_id']; ?>">
-                                                    <i class="fas fa-times"></i>
+                                                    <i class="fas fa-trash"></i>
                                                 </button>
                                             <?php endif; ?>
                                         </td>
@@ -201,38 +188,64 @@ $citas_paginadas = array_slice($citas, $indice_inicio, $por_pagina);
                         </table>
                     </div>
 
-                    <!-- Paginación -->
                     <?php if ($total_paginas > 1): ?>
-                        <div class="paginacion-container">
-                            <ul class="paginacion">
-                                <?php if ($pagina_actual > 1): ?>
-                                    <li class="page-item">
-                                        <a class="page-link page-nav" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $pagina_actual - 1])); ?>" aria-label="Anterior">
-                                            <i class="fas fa-angle-left"></i>
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
+                        <div class="pagination-container">
+                            <nav aria-label="Paginación">
+                                <ul class="pagination">
+                                    <?php if ($pagina_actual > 1): ?>
+                                        <li class="page-item">
+                                            <a class="page-link page-nav" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $pagina_actual - 1])); ?>" aria-label="Anterior">
+                                                &laquo; Anterior
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
 
-                                <?php
-                                $inicio = max(1, $pagina_actual - 2);
-                                $fin = min($total_paginas, $pagina_actual + 2);
+                                    <?php
+                                    $paginasMostradas = 5; 
+                                    $inicio = max(1, $pagina_actual - floor($paginasMostradas / 2));
+                                    $fin = min($total_paginas, $inicio + $paginasMostradas - 1);
 
-                                for ($i = $inicio; $i <= $fin; $i++): ?>
-                                    <li class="page-item <?php echo $i == $pagina_actual ? 'active' : ''; ?>">
-                                        <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $i])); ?>">
-                                            <?php echo $i; ?>
-                                        </a>
-                                    </li>
-                                <?php endfor; ?>
+                                    if ($fin - $inicio + 1 < $paginasMostradas) {
+                                        $inicio = max(1, $fin - $paginasMostradas + 1);
+                                    }
 
-                                <?php if ($pagina_actual < $total_paginas): ?>
-                                    <li class="page-item">
-                                        <a class="page-link page-nav" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $pagina_actual + 1])); ?>" aria-label="Siguiente">
-                                            <i class="fas fa-angle-right"></i>
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
-                            </ul>
+                                    if ($inicio > 1): ?>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => 1])); ?>">1</a>
+                                        </li>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                    <?php endif; ?>
+
+                                    <?php for ($i = $inicio; $i <= $fin; $i++): ?>
+                                        <li class="page-item <?php echo $i == $pagina_actual ? 'active' : ''; ?>">
+                                            <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $i])); ?>">
+                                                <?php echo $i; ?>
+                                            </a>
+                                        </li>
+                                    <?php endfor; ?>
+
+                                    <?php if ($fin < $total_paginas): ?>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $total_paginas])); ?>">
+                                                <?php echo $total_paginas; ?>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+
+                                    <?php if ($pagina_actual < $total_paginas): ?>
+                                        <li class="page-item">
+                                            <a class="page-link page-nav" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $pagina_actual + 1])); ?>" aria-label="Siguiente">
+                                                Siguiente &raquo;
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </nav>
                         </div>
                     <?php endif; ?>
                 <?php endif; ?>
@@ -242,26 +255,26 @@ $citas_paginadas = array_slice($citas, $indice_inicio, $por_pagina);
     <div class="modal fade" id="detalleModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Detalles de la Cita</h5>
+                <div class="modal-header" style="background-color: #2c3e50;">
+                    <h5 class="modal-title text-white">Detalles de la Cita</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="detalleModalBody">
                     Cargando información...
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="boton-cancelar" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Modal de Cancelación -->
-    <div class="modal fade" id="cancelarModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="cancelarModal" tabindex="-1" aria-hidden="true" style="margin-top: 150px;">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirme la Cancelación</h5>
+                <div class="modal-header" style="background-color: #2c3e50;">
+                    <h5 class="modal-title text-white">Confirme la Cancelación</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="post" id="formCancelarCita">
@@ -271,65 +284,86 @@ $citas_paginadas = array_slice($citas, $indice_inicio, $por_pagina);
                         <p class="text-muted">Esta acción no se puede deshacer.</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="cancelar-eliminar" data-bs-dismiss="modal">cancelar</button>
-                        <button type="submit" name="cancelar_cita" class="confirmar-eliminar">
-                            <i class="fas fa-times me-1"></i> confirmar
-                        </button>
+                        <button type="button" class="boton-cancelar" data-bs-dismiss="modal">cancelar</button>
+                        <button type="submit" name="cancelar_cita" class="boton-actualizar">confirmar</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <?php if (isset($_SESSION['usuario'])): ?>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <?php endif; ?>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.querySelectorAll('.ver-detalle').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const citaId = this.getAttribute('data-cita-id');
-                const modalBody = document.getElementById('detalleModalBody');
+        $(document).ready(function() {
+            // Mostrar alertas flotantes
+            function mostrarAlerta(mensaje, tipo) {
+                const alerta = `
+                    <div class="alert alert-${tipo} alert-dismissible fade show alert-floating" role="alert">
+                        ${mensaje}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `;
+                $('#alertContainer').html(alerta);
+                setTimeout(() => {
+                    $('.alert').alert('close');
+                }, 5000);
+            }
+
+            // Mostrar alertas de sesión si existen
+            <?php if (isset($_SESSION['mensaje_exito'])): ?>
+                mostrarAlerta('<?php echo $_SESSION['mensaje_exito']; ?>', 'success');
+                <?php unset($_SESSION['mensaje_exito']); ?>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['mensaje_error'])): ?>
+                mostrarAlerta('<?php echo $_SESSION['mensaje_error']; ?>', 'danger');
+                <?php unset($_SESSION['mensaje_error']); ?>
+            <?php endif; ?>
+
+            // Configurar modal de detalles
+            $('.ver-detalle').click(function() {
+                const citaId = $(this).data('cita-id');
+                const modalBody = $('#detalleModalBody');
 
                 // Mostrar carga
-                modalBody.innerHTML = `
+                modalBody.html(`
                     <div class="text-center py-4">
                         <div class="spinner-border text-primary" role="status">
                             <span class="visually-hidden">Cargando...</span>
                         </div>
                         <p class="mt-2">Cargando detalles de la cita...</p>
                     </div>
-                `;
+                `);
 
                 // Obtener detalles via AJAX
-                fetch(`../funciones/chatboot_detalles.php?cita_id=${citaId}`)
-                    .then(response => response.text())
-                    .then(html => {
-                        modalBody.innerHTML = html;
-                    })
-                    .catch(error => {
-                        modalBody.innerHTML = `
+                $.ajax({
+                    url: `../funciones/chatboot_detalles.php?cita_id=${citaId}`,
+                    type: 'GET',
+                    success: function(html) {
+                        modalBody.html(html);
+                    },
+                    error: function() {
+                        modalBody.html(`
                             <div class="alert alert-danger">
                                 Ocurrió un error al cargar los detalles. Por favor intenta nuevamente.
                             </div>
-                        `;
-                    });
+                        `);
+                    }
+                });
             });
-        });
 
-        // Configurar modal de cancelación
-        document.querySelectorAll('.cancelar-cita').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const citaId = this.getAttribute('data-cita-id');
-                document.getElementById('citaIdCancelar').value = citaId;
+            // Configurar modal de cancelación
+            $('.cancelar-cita').click(function() {
+                const citaId = $(this).data('cita-id');
+                $('#citaIdCancelar').val(citaId);
             });
-        });
 
-        // Resetear filtros
-        document.getElementById('resetFilters').addEventListener('click', function() {
-            document.getElementById('especialidad').value = '';
-            document.getElementById('doctor').value = '';
+            // Resetear filtros
+            $('.btn-limpiar').click(function() {
+                $('#especialidad, #doctor, #estado').val('');
+            });
         });
     </script>
 </body>

@@ -429,6 +429,22 @@ body {
     padding: 8px 10px;
 }
 
+.ver-detalle{
+    color: rgb(0, 153, 180);
+    font-weight: bold;
+    font-size: 20px;
+}
+.cancelar-cita{
+    color: red;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.ver-detalle:hover,
+.cancelar-cita:hover {
+    color: rgb(0, 102, 122);
+    text-decoration: none;
+}
 .filtros-row {
     display: flex;
     gap: 10px;
